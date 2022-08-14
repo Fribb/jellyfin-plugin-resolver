@@ -19,8 +19,7 @@ namespace Jellyfin.Plugin.Resolver.Resolver
 {
 	enum FileType
 	{
-		FolderFranchise, // Can be nested
-		FolderAnime, // Can not be nested, always has franchise as parent
+		FolderAnime, // Can not be nested
 		FolderExtra, // Can not be nested, always has anime as parent
 
 		FileEpisode, // Always has anime as parent
@@ -57,11 +56,7 @@ namespace Jellyfin.Plugin.Resolver.Resolver
 
 			FileType type;
 
-			if (basename.Equals("extra")) type = FileType.FolderExtra;
-			else if (Regex.IsMatch(basename, @"^\d+\.\s")) type = FileType.FolderAnime;
-			else type = FileType.FolderFranchise;
-
-			return type;
+			return FileType.FolderAnime;
 		}
 
 		private static FileType? GetFileType(string path, string parentPath, bool isDirectory)
@@ -101,15 +96,7 @@ namespace Jellyfin.Plugin.Resolver.Resolver
 			var type = GetFileType(args.Path, args.Parent.Path, args.IsDirectory);
 			_logger.LogDebug($"{args.Path} is {type}");
 
-			if (type == FileType.FolderFranchise)
-			{
-				return new Folder
-				{
-					Path = args.Path,
-					Name = args.FileInfo.Name
-				};
-			}
-			else if (type == FileType.FolderAnime)
+			if (type == FileType.FolderAnime)
 			{
 				var name = Regex.Replace(args.FileInfo.Name, @"^\d+\.\s", "");
 
