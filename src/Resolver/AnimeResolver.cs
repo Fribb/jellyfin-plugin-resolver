@@ -105,8 +105,7 @@ namespace Jellyfin.Plugin.Resolver.Resolver
 					Path = args.Path,
 					Name = name,
 					SortName = name,
-					ForcedSortName = name,
-					IndexNumber = int.Parse(Regex.Match(args.FileInfo.Name, @"^(\d+)\.\s").Groups[1].Value)
+					ForcedSortName = name
 				};
 			}
 			else if (type == FileType.FolderExtra)
